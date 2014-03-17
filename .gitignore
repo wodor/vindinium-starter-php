@@ -1,3 +1,6 @@
 .idea
 ._*
 .DS_Store
+bin
+composer.phar
+vendor

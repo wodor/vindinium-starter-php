@@ -1,0 +1,28 @@
+{
+    "name": "wodor/vinidium",
+    "description": "vinidium client",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Artur Wielogorski",
+            "email": "wodor@wodor.net"
+        }
+    ],
+    "require": {
+    },
+    "require-dev": {
+        "phpspec/phpspec": "2.0.*@dev"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "" : [
+                "src/"
+            ],
+            "spec" : ""
+        }
+    },
+    "config" : {
+        "bin-dir" : "bin"
+    }
+}

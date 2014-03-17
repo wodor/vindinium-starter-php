@@ -57,6 +57,7 @@ class Client
 
         ob_start();
         while ($this->isFinished($state) === false) {
+//            print_r($state);
             // Some nice output ;)
             echo '.';
             ob_flush();
@@ -66,6 +67,9 @@ class Client
             $direction = $botObject->move($state);
             $state = $this->move($url, $direction);
         }
+        echo $state['game']['board']['tiles'];
+        echo "\n".$state['viewUrl'];
+        ob_flush();
         ob_end_clean();
     }
 
