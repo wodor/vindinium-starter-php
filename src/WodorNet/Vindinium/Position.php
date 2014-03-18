@@ -34,4 +34,15 @@ class Position
         return "( x:{$this->x}, y:{$this->y} )";
     }
 
+    public function neighbours()
+    {
+        $neighbours = [];
+        $neighbours[] = new Position($this->x-1, $this->y);
+        $neighbours[] = new Position($this->x+1, $this->y);
+        $neighbours[] = new Position($this->x, $this->y-1);
+        $neighbours[] = new Position($this->x, $this->y+1);
+
+        return $neighbours;
+    }
+
 }
