@@ -14,7 +14,18 @@ class Display
 
     public function displayBoard()
     {
-        return implode("\n" , str_split($this->state->getBoard()->getTiles(),
-            $this->state->getBoard()->getSize()))."\n";
+        $dimension = $this->state->getBoard()->getSize() * 2;
+        $mapsep = str_repeat('=', $dimension);
+
+        return "\n" . $mapsep . "\n" .
+        implode("\n" , str_split($this->state->getBoard()->getTiles(),
+            $dimension)) .
+        "\n" . $mapsep . "\n";
     }
+
+    public function displayLink()
+    {
+        echo "\n" . $this->state->getViewUrl();
+    }
+
 }

@@ -52,23 +52,24 @@ class Client
         }
 
         // Get the initial state
-        $state = $this->getNewGameState();
-        echo "Playing at: " . $state['viewUrl'] . "\n";
+        $stateArray = $this->getNewGameState();
+        echo "Playing at: " . $stateArray['viewUrl'] . "\n";
 
         ob_start();
-        while ($this->isFinished($state) === false) {
-//            print_r($state);
+        while ($this->isFinished($stateArray) === false) {
+            $state =  new \WodorNet\Vindinium\State($stateArray);
+            $display = new \WodorNet\Vindinium\Display($state);
             // Some nice output ;)
+            echo $display->displayBoard();
             echo '.';
             ob_flush();
 
             // Move to some direction
-            $url = $state['playUrl'];
-            $direction = $botObject->move($state);
-            $state = $this->move($url, $direction);
+            $url = $stateArray['playUrl'];
+            $direction = $botObject->move($stateArray);
+            $stateArray = $this->move($url, $direction);
         }
-        echo $state['game']['board']['tiles'];
-        echo "\n".$state['viewUrl'];
+        echo $display->displayLink();
         ob_flush();
         ob_end_clean();
     }

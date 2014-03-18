@@ -10,7 +10,7 @@ class DisplaySpec extends ObjectBehavior
 {
     public function let(State $state, Board $board)
     {
-        $board->getSize()->willReturn(4);
+        $board->getSize()->willReturn(2);
         $board->getTiles()->willReturn('####$$$$%%%%^^^^');
         $state->getBoard()->
             willReturn($board);
@@ -20,7 +20,7 @@ class DisplaySpec extends ObjectBehavior
     public function it_displays_board_in_nice_way()
     {
        $this->displayBoard()
-           ->shouldReturn("####\n$$$$\n%%%%\n^^^^\n");
+           ->shouldReturn("\n====\n####\n$$$$\n%%%%\n^^^^\n====\n");
     }
 
 }
