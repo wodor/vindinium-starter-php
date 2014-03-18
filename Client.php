@@ -70,6 +70,7 @@ class Client
             $stateArray = $this->move($url, $direction);
         }
         echo $display->displayLink();
+        echo $state->getProtagonist()->getPos() . ' start: ' . $state->getProtagonist()->getSpawnPos();
         ob_flush();
         ob_end_clean();
     }

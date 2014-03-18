@@ -7,8 +7,16 @@ namespace WodorNet\Vindinium;
  *
  * @package WodorNet\Vindinium
  */
+/**
+ * Class State
+ *
+ * @package WodorNet\Vindinium
+ */
 class State
 {
+    /**
+     * @var array
+     */
     private $heroes = array();
 
     /**
@@ -53,6 +61,9 @@ class State
         return $this->board;
     }
 
+    /**
+     * @return mixed
+     */
     public function getViewUrl()
     {
         return $this->stateArray['viewUrl'];
@@ -66,8 +77,11 @@ class State
         return $this->heroes;
     }
 
+    /**
+     * @return Hero
+     */
     public function getProtagonist()
     {
-        return $this->getHeroes()[$this->stateArray['hero']['userId']];
+        return $this->getHeroes()[$this->stateArray['hero']['id']];
     }
 }
