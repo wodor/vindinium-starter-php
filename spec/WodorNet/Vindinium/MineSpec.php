@@ -11,11 +11,4 @@ class MineSpec extends ObjectBehavior
     {
         $this->shouldHaveType('WodorNet\Vindinium\Mine');
     }
-
-    function it_has_position()
-    {
-
-    }
-
-
 }

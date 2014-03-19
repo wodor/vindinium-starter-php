@@ -5,6 +5,7 @@ namespace spec\WodorNet\Vindinium;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use WodorNet\Vindinium\Position;
+use WodorNet\Vindinium\Tile\Ground;
 
 class BoardSpec extends ObjectBehavior
 {
@@ -12,8 +13,8 @@ class BoardSpec extends ObjectBehavior
     {
         $this->beConstructedWith(4,
             '$-    $-'.
-            '    ####'.
-            '    ####'.
+            '[]  ####'.
+            '    ##  '.
             '$2    @1'
         );
     }
@@ -23,9 +24,16 @@ class BoardSpec extends ObjectBehavior
         $this->shouldHaveType('WodorNet\Vindinium\Board');
     }
 
-    function it_finds_closest_free_mine()
+    function it_finds_surrounding_passable_tiles()
     {
-        $this->findClosestFreeMine(new Position(3,3))
-            ->shouldBeLike(new Position(0,0));
+        $this->getSurroundingPassableTiles(new Position(3,3))
+            ->shouldHaveCount(2);
     }
+
+    function it_builds_tile_graph()
+    {
+        $this->getTiles()->shouldHaveCount(7);
+    }
+
+// pomysl - rob ekspoloracje - dawaj info jak blisko sa poszczegolne cele
 }

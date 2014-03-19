@@ -25,6 +25,11 @@ abstract class AbstractTile
     private $board;
 
     /**
+     * @var Tile[]
+     */
+    private $neighbours;
+
+    /**
      * @param Position $position
      * @param Board    $board
      */
@@ -48,19 +53,18 @@ abstract class AbstractTile
         return  get_class($this) . " ($this->symbol) at " . $this->position;
     }
 
-    public function getSurroundingPassableTiles()
+
+    public function addNeighbour(AbstractTile $tile)
     {
-        $surrTiles = [];
-        foreach ($this->position->neighbours() as $neighbour) {
-            if (!$this->board->positionIsInBounds($neighbour)) {
-                continue;
-            }
-            $tile = $this->board->getTileByPosition($neighbour);
-            if ($tile->isPassable()) {
-                $surrTiles[] = $tile;
-            }
-        }
-        return $surrTiles;
+        $this->neighbours[] = $tile;
+    }
+
+    /**
+     * @return \WodorNet\Vindinium\Position
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 
 }

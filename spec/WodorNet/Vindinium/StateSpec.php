@@ -7,7 +7,7 @@ use Prophecy\Argument;
 
 class StateSpec extends ObjectBehavior
 {
-    const tiles = '####$$$$%%%%^^^^';
+    const tiles = '####$$$$    @1@2';
 
     const size = 4;
 
@@ -38,7 +38,7 @@ class StateSpec extends ObjectBehavior
     function it_puts_the_board_in_place()
     {
         $this->getBoard()->shouldBeAnInstanceOf('WodorNet\Vindinium\Board');
-        $this->getBoard()->getTiles()->shouldBeEqualTo(self::tiles);
+        $this->getBoard()->getTilesString()->shouldBeEqualTo(self::tiles);
         $this->getBoard()->getSize()->shouldBeEqualTo(self::size);
     }
 

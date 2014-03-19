@@ -7,8 +7,4 @@ use Prophecy\Argument;
 
 class HeroSpec extends ObjectBehavior
 {
-    function it_is_initializable()
-    {
-//        $this->shouldHaveType('WodorNet\Vindinium\Hero');
-    }
 }

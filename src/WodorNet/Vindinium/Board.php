@@ -6,14 +6,31 @@ use WodorNet\Vindinium\Tile\AbstractTile;
 
 class Board
 {
-
     private $size;
+    private $tilesString;
     private $tiles;
+    private $tilesArray;
 
-    public function __construct($size, $tiles)
+    public function __construct($size, $tilesString)
     {
         $this->size = $size;
-        $this->tiles = $tiles;
+        $this->tilesString = $tilesString;
+        $this->tiles = new \SplObjectStorage();
+        $this->buildTileGraph();
+    }
+
+    private function getFirstPassableTile()
+    {
+        $i = 0;
+        while(true) {
+            $x = $i%$this->size;
+            $y = floor($i/$this->size);
+            $tile = $this->createTileInPosition(new Position($x, $y));
+            if($tile->isPassable()) {
+                return $tile;
+            }
+            $i++;
+        }
     }
 
     /**
@@ -27,18 +44,9 @@ class Board
     /**
      * @return mixed
      */
-    public function getTiles()
+    public function getTilesString()
     {
-        return $this->tiles;
-    }
-
-    public function findClosestFreeMine(Position $startPos)
-    {
-        $startTile = $this->getTileByPosition($startPos);
-
-        echo $startPos;
-        var_dump($startTile->getSurroundingPassableTiles());
-        exit();
+        return $this->tilesString;
     }
 
     /**
@@ -46,17 +54,25 @@ class Board
      * @return AbstractTile
      * @throws \OutOfBoundsException
      */
-    public function getTileByPosition(Position $startPos)
+    public function createTileInPosition(Position $startPos)
     {
+        if(isset($this->tilesArray[(string)$startPos])) {
+            return $this->tilesArray[(string)$startPos];
+        }
         $pos = $this->tilesPositionIndex($startPos);
 
         if(!$this->positionIsInBounds($startPos)) {
             throw new \OutOfBoundsException($startPos . " is out of bounds");
         }
 
-        $symbol = substr($this->tiles, $pos, 2);
+        $symbol = substr($this->tilesString, $pos, 2);
 
-        return $this->createTile($startPos, $symbol);
+        $tile = $this->createTile($startPos, $symbol);
+
+        // fuck memory for now
+        $this->tilesArray[(string)$startPos] = $tile;
+
+        return $tile;
     }
 
     /**
@@ -81,7 +97,7 @@ class Board
                 $class = 'Hero';
                 break;
             default:
-                throw new \InvalidArgumentException(' "' . $symbol . '" ' . ' unrecognized tiles:' . $this->tiles);
+                throw new \InvalidArgumentException(' "' . $symbol . '" ' . ' unrecognized tile:' . $this->tilesString);
         }
 
         $class = "\\WodorNet\\Vindinium\\Tile\\".$class;
@@ -97,7 +113,13 @@ class Board
     public function positionIsInBounds(Position $startPos)
     {
         $pos = $this->tilesPositionIndex($startPos);
-        return !($pos > strlen($this->tiles)-2 || $startPos->getX() > $this->size - 1);
+        if(($pos > strlen($this->tilesString)-2 || $startPos->getX() > $this->size - 1)) {
+            return false;
+        };
+        if($startPos->getX()<0 || $startPos->getY()<0){
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -109,6 +131,43 @@ class Board
         $pos = $startPos->getY() * $this->size * 2 + $startPos->getX() * 2;
 
         return $pos;
+    }
+
+    public function getSurroundingPassableTiles(Position $position)
+    {
+        $surrTiles = [];
+        foreach ($position->neighbours() as $neighbour) {
+            if (!$this->positionIsInBounds($neighbour)) {
+                continue;
+            }
+
+            $tile = $this->createTileInPosition($neighbour);
+            if ($tile->isPassable()) {
+                $surrTiles[] = $tile;
+            }
+        }
+        return $surrTiles;
+    }
+
+    public function buildTileGraph(AbstractTile $tile = null)
+    {
+        if(is_null($tile)) {
+            $tile = $this->getFirstPassableTile();
+        }
+        if(!$this->tiles->contains($tile)) {
+            $this->tiles->attach($tile);
+            foreach($this->getSurroundingPassableTiles($tile->getPosition()) as $discoveredTile) {
+                $this->buildTileGraph($discoveredTile);
+            }
+        }
+    }
+
+    /**
+     * @return \SplObjectStorage
+     */
+    public function getTiles()
+    {
+        return $this->tiles;
     }
 
 }

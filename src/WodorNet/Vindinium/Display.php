@@ -18,7 +18,7 @@ class Display
         $mapsep = str_repeat('=', $dimension);
 
         return "\n" . $mapsep . "\n" .
-        implode("\n" , str_split($this->state->getBoard()->getTiles(),
+        implode("\n" , str_split($this->state->getBoard()->getTilesString(),
             $dimension)) .
         "\n" . $mapsep . "\n";
     }
