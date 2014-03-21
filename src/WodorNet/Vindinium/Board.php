@@ -6,6 +6,7 @@ use WodorNet\Vindinium\Tile\AbstractTile;
 
 class Board
 {
+
     private $size;
     private $tilesString;
     private $tiles;
@@ -16,7 +17,11 @@ class Board
         $this->size = $size;
         $this->tilesString = $tilesString;
         $this->tiles = new \SplObjectStorage();
-        $this->buildTileGraph();
+        $this->buildTileGraph($this->getFirstPassableTile());
+
+        foreach($this->tiles as $tile) {
+            echo "\n" . $tile;
+        }
     }
 
     private function getFirstPassableTile()
@@ -149,14 +154,13 @@ class Board
         return $surrTiles;
     }
 
-    public function buildTileGraph(AbstractTile $tile = null)
+    public function buildTileGraph(AbstractTile $tile)
     {
-        if(is_null($tile)) {
-            $tile = $this->getFirstPassableTile();
-        }
         if(!$this->tiles->contains($tile)) {
             $this->tiles->attach($tile);
             foreach($this->getSurroundingPassableTiles($tile->getPosition()) as $discoveredTile) {
+                $tile->addNeighbour($discoveredTile);
+                $discoveredTile->addNeighbour($tile);
                 $this->buildTileGraph($discoveredTile);
             }
         }
