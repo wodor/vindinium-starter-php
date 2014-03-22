@@ -113,7 +113,6 @@ class Board
     /**
      * @param  Position              $startPos
      * @return mixed
-     * @throws \OutOfBoundsException
      */
     public function positionIsInBounds(Position $startPos)
     {

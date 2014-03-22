@@ -2,7 +2,7 @@
 
 namespace WodorNet\Vindinium;
 
-class Pathfinder
+class Scout
 {
 
     private $position;
