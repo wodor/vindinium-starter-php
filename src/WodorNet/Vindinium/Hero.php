@@ -86,7 +86,7 @@ class Hero
     }
 
     /**
-     * @return mixed
+     * @return Position
      */
     public function getPos()
     {

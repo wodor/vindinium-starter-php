@@ -10,15 +10,41 @@ class Scout
 
     private $board;
 
-    public function __construct(Position $position, Board $board)
+    /**
+     * @param mixed $board
+     */
+    public function setBoard($board)
+    {
+        $this->board = $board;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBoard()
+    {
+        return $this->board;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
     {
         $this->position = $position;
-        $this->board = $board;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 
     public function findClosestMine()
     {
-        $this->findMines()->top();
+        return $this->findMines()->top();
     }
 
     /**

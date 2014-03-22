@@ -45,11 +45,27 @@ class Position
             $neighbours[] = new Position($this->x-1, $this->y);
         }
 
-        if($this->y>0) {
+        if ($this->y>0) {
             $neighbours[] = new Position($this->x, $this->y-1);
         }
 
         return $neighbours;
     }
 
+    public function moveStringTo(Position $position)
+    {
+        $xDist = $this->x - $position->getX();
+        $yDist = $this->y - $position->getY();
+
+        if ($xDist == 0 && $yDist == 0) {
+            return 'Stay';
+        }
+
+        if (abs($xDist) < abs($yDist)) {
+            return ($yDist > 0 ? 'North' : 'South');
+        }
+
+        return ($xDist > 0 ? 'West' : 'East');
+
+    }
 }

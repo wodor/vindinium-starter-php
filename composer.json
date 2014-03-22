@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "pimple/pimple": "*"
+        "pimple/pimple": "*",
+        "monolog/monolog": "*"
     },
     "require-dev": {
         "phpspec/phpspec": "2.0.*@dev"

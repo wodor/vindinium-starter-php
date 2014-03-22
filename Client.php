@@ -39,12 +39,12 @@ class Client
         require('./HttpPost.php');
 
         for ($i = 0; $i <= ($this->numberOfGames - 1); $i++) {
-            $this->start(new \WodorNet\Vindinium\Bot\Greedy());
+            $this->start();
             echo "\nGame finished: " . ($i + 1) . "/" . $this->numberOfGames . "\n";
         }
     }
 
-    private function start($botObject)
+    private function start()
     {
         // Starts a game with all the required parameters
         if ($this->mode == 'arena') {
@@ -55,7 +55,10 @@ class Client
         $stateArray = $this->getNewGameState();
         echo "Playing at: " . $stateArray['viewUrl'] . "\n";
 
-        $state =  new \WodorNet\Vindinium\State($stateArray);
+        $state = new \WodorNet\Vindinium\State();
+        $state->update($stateArray);
+        var_dump($stateArray);
+        $botObject = new \WodorNet\Vindinium\Bot\Greedy(new \WodorNet\Vindinium\Scout());
         $botObject->setState($state);
         ob_start();
         while ($this->isFinished($stateArray) === false) {

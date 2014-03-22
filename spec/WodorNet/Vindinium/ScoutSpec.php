@@ -10,7 +10,8 @@ class ScoutSpec extends ObjectBehavior
 {
     public function let(Position $position, Board $board)
     {
-        $this->beConstructedWith($position, $board);
+        $this->setBoard($board);
+        $this->setPosition($position);
     }
     public function it_is_initializable()
     {
