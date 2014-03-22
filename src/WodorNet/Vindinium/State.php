@@ -29,10 +29,11 @@ class State
      */
     private $board;
 
+
     /**
      * @param $stateArray
      */
-    public function __construct($stateArray)
+    public function update($stateArray)
     {
         $this->stateArray = $stateArray;
         $this->board = new Board($stateArray['game']['board']['size'], $stateArray['game']['board']['tiles']);
@@ -83,5 +84,10 @@ class State
     public function getProtagonist()
     {
         return $this->getHeroes()[$this->stateArray['hero']['id']];
+    }
+
+    public function __construct($argument1)
+    {
+        // TODO: write logic here
     }
 }

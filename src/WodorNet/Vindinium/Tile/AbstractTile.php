@@ -48,6 +48,16 @@ abstract class AbstractTile
         return false;
     }
 
+    /**
+     * Tells if this tile is here for whole game
+     * @return bool
+     */
+    public function isMovable()
+    {
+        return false;
+    }
+
+
     public function __toString()
     {
         return  get_class($this) . " ($this->symbol) at " . $this->position;

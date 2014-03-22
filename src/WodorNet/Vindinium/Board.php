@@ -19,21 +19,21 @@ class Board
         $this->tiles = new \SplObjectStorage();
         $this->buildTileGraph($this->getFirstPassableTile());
 
-        foreach($this->tiles as $tile) {
-            echo "\n" . $tile;
-        }
+//        foreach($this->tiles as $tile) {
+//            echo "\n" . $tile;
+//        }
     }
 
     private function getFirstPassableTile()
     {
         $i = 0;
         while(true) {
-            $x = $i%$this->size;
-            $y = floor($i/$this->size);
-            $tile = $this->createTileInPosition(new Position($x, $y));
+            $startPos = $this->getPositionByStringIndex($i);
+            $tile = $this->createTileInPosition($startPos);
             if($tile->isPassable()) {
                 return $tile;
             }
+            $i++;
             $i++;
         }
     }
@@ -171,6 +171,23 @@ class Board
     public function getTiles()
     {
         return $this->tiles;
+    }
+
+    /**
+     * @param $i
+     * @return Position
+     */
+    public function getPositionByStringIndex($i)
+    {
+        if($i%2 != 0) {
+            throw new \InvalidArgumentException("Index must be even");
+        }
+        $i = (int)($i/2);
+        $x = $i % $this->size;
+        $y = (int)floor($i / $this->size);
+        $startPos = new Position($x, $y);
+
+        return $startPos;
     }
 
 }

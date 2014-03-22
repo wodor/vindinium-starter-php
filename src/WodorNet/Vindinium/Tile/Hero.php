@@ -17,4 +17,9 @@ class Hero extends AbstractTile
 //        return true;
         return false;
     }
+
+    public function isMovable()
+    {
+        return true;
+    }
 }

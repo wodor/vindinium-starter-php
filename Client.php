@@ -55,12 +55,13 @@ class Client
         $stateArray = $this->getNewGameState();
         echo "Playing at: " . $stateArray['viewUrl'] . "\n";
 
+        $state =  new \WodorNet\Vindinium\State($stateArray);
         ob_start();
         while ($this->isFinished($stateArray) === false) {
-            $state =  new \WodorNet\Vindinium\State($stateArray);
-            $display = new \WodorNet\Vindinium\Display($state);
+            $state->update($stateArray);
+//            $display = new \WodorNet\Vindinium\Display($state);
             // Some nice output ;)
-            echo $display->displayBoard();
+//            echo $display->displayBoard();
             echo '.';
             ob_flush();
 

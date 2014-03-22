@@ -35,5 +35,12 @@ class BoardSpec extends ObjectBehavior
         $this->getTiles()->shouldHaveCount(7);
     }
 
+    function it_calculates_postion_by_string_index()
+    {
+        $this->getPositionByStringIndex(8)->getX()->shouldReturn(0);
+        $this->getPositionByStringIndex(8)->getY()->shouldReturn(1);
+
+    }
+
 // pomysl - rob ekspoloracje - dawaj info jak blisko sa poszczegolne cele
 }

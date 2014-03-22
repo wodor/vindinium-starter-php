@@ -3,12 +3,52 @@
 namespace spec\WodorNet\Vindinium;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use WodorNet\Vindinium\Board;
+use WodorNet\Vindinium\Position;
 
 class ScoutSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function let(Position $position, Board $board)
+    {
+        $this->beConstructedWith($position, $board);
+    }
+    public function it_is_initializable()
     {
         $this->shouldHaveType('WodorNet\Vindinium\Scout');
     }
+
+    public function it_finds_mines(Board $board, Position $minePosition)
+    {
+        $tiles =
+            '@1      '.
+            '$-      '.
+            '      $-'.
+            '        ';
+
+        $board->getSize()->willReturn(4);
+        $board->getTilesString()->willReturn($tiles);
+
+        $board->getPositionByStringIndex(8)->shouldBeCalled()->willReturn($minePosition);
+        $board->getPositionByStringIndex(22)->shouldBeCalled()->willReturn($minePosition);
+
+        $this->findMines()->shouldContain($minePosition);
+    }
+
+    public function it_finds_heroes(Board $board, Position $heroPosition)
+    {
+        $tiles =
+            '@1      '.
+            '$-      '.
+            '      $-'.
+            '    @4  ';
+
+        $board->getSize()->willReturn(4);
+        $board->getTilesString()->willReturn($tiles);
+
+        $board->getPositionByStringIndex(0)->shouldBeCalled()->willReturn($heroPosition);
+        $board->getPositionByStringIndex(28)->shouldBeCalled()->willReturn($heroPosition);
+
+        $this->findHeroes()->shouldContain($heroPosition);
+    }
+
 }
