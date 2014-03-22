@@ -31,7 +31,7 @@ class ScoutSpec extends ObjectBehavior
         $board->getPositionByStringIndex(8)->shouldBeCalled()->willReturn($minePosition);
         $board->getPositionByStringIndex(22)->shouldBeCalled()->willReturn($minePosition);
 
-        $this->findMines()->shouldContain($minePosition);
+        $this->findMines()->top()->shouldReturn($minePosition);
     }
 
     public function it_finds_heroes(Board $board, Position $heroPosition)
@@ -48,7 +48,7 @@ class ScoutSpec extends ObjectBehavior
         $board->getPositionByStringIndex(0)->shouldBeCalled()->willReturn($heroPosition);
         $board->getPositionByStringIndex(28)->shouldBeCalled()->willReturn($heroPosition);
 
-        $this->findHeroes()->shouldContain($heroPosition);
+        $this->findHeroes()->top()->shouldReturn($heroPosition);
     }
 
 }

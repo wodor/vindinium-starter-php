@@ -39,7 +39,7 @@ class Client
         require('./HttpPost.php');
 
         for ($i = 0; $i <= ($this->numberOfGames - 1); $i++) {
-            $this->start(new RandomBot());
+            $this->start(new \WodorNet\Vindinium\Bot\Greedy());
             echo "\nGame finished: " . ($i + 1) . "/" . $this->numberOfGames . "\n";
         }
     }
@@ -56,12 +56,13 @@ class Client
         echo "Playing at: " . $stateArray['viewUrl'] . "\n";
 
         $state =  new \WodorNet\Vindinium\State($stateArray);
+        $botObject->setState($state);
         ob_start();
         while ($this->isFinished($stateArray) === false) {
             $state->update($stateArray);
-//            $display = new \WodorNet\Vindinium\Display($state);
+            $display = new \WodorNet\Vindinium\Display($state);
             // Some nice output ;)
-//            echo $display->displayBoard();
+            echo $display->displayBoard();
             echo '.';
             ob_flush();
 

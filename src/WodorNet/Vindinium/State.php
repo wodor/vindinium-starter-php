@@ -86,8 +86,4 @@ class State
         return $this->getHeroes()[$this->stateArray['hero']['id']];
     }
 
-    public function __construct($argument1)
-    {
-        // TODO: write logic here
-    }
 }

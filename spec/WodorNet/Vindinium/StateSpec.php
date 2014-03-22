@@ -26,8 +26,7 @@ class StateSpec extends ObjectBehavior
             'hero' => json_decode('[ "id":2, "name":"bar", "userId":"bbbbbbbb", "elo":1200, "pos":{ "x":6, "y":12 }, "life":100, "gold":0, "mineCount":0, "spawnPos":{ "x":12, "y":6 }, "crashed":true ]')
 
         ];
-
-        $this->beConstructedWith($state);
+        $this->update($state);
     }
 
     function it_is_initializable()

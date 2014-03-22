@@ -2,6 +2,8 @@
 
 namespace WodorNet\Vindinium;
 
+use WodorNet\Vindinium\DistanceRank\Manhattan;
+
 class Scout
 {
     private $position;
@@ -14,32 +16,43 @@ class Scout
         $this->board = $board;
     }
 
-    public function findMines()
+    public function findClosestMine()
     {
-        $regex = '/\$[\-1-4]{1}/';
-        return $this->findRegexPostions($regex);
+        $this->findMines()->top();
     }
 
+    /**
+     * @return Manhattan
+     */
+    public function findMines()
+    {
+        $minesHeap = new Manhattan($this->position);
+        $regex = '/\$[\-1-4]{1}/';
+        return $this->findRegexPostions($regex, $minesHeap);
+    }
+
+    /**
+     * @return Manhattan
+     */
     public function findHeroes()
     {
+        $heroesHeap = new Manhattan($this->position);
         $regex = '/@[\-1-4]{1}/';
-        return $this->findRegexPostions($regex);
+        return $this->findRegexPostions($regex, $heroesHeap);
     }
 
     /**
      * @param $regex
      * @param $matches
-     * @return array
+     * @return Manhattan
      */
-    private function findRegexPostions($regex)
+    private function findRegexPostions($regex, \SplHeap $heap)
     {
         preg_match_all($regex, $this->board->getTilesString(), $matches, PREG_OFFSET_CAPTURE);
-        $postions = [];
         foreach ($matches[0] as $match) {
-            $postions[] = $this->board->getPositionByStringIndex($match[1]);
+            $heap->insert($this->board->getPositionByStringIndex($match[1]));
 
         }
-
-        return $postions;
+        return $heap;
     }
 }
