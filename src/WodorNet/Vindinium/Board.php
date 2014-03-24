@@ -132,7 +132,7 @@ class Board
      */
     private function tilesPositionIndex(Position $startPos)
     {
-        $pos = $startPos->getY() * $this->size * 2 + $startPos->getX() * 2;
+        $pos = $startPos->getX() * $this->size * 2 + $startPos->getY() * 2;
 
         return $pos;
     }

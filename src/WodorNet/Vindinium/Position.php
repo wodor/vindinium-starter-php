@@ -61,11 +61,22 @@ class Position
             return 'Stay';
         }
 
-        if (abs($xDist) < abs($yDist)) {
-            return ($yDist > 0 ? 'North' : 'South');
+        if (abs($xDist) > abs($yDist)) {
+            return ($xDist > 0 ? 'North' : 'South');
         }
 
-        return ($xDist > 0 ? 'West' : 'East');
+        return ($yDist > 0 ? 'West' : 'East');
 
     }
+
+    public function isNeighbourOf(Position $position)
+    {
+        foreach($this->neighbours() as $neighbour){
+            if($position->getX() == $neighbour->getX() && $position->getY() == $neighbour->getY()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

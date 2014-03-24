@@ -6,19 +6,12 @@ use Monolog\Logger;
 use WodorNet\Vindinium\Scout;
 use WodorNet\Vindinium\State;
 
-class Greedy
+class Greedy extends AbstractBot
 {
-    private $logger;
-
     /**
      * @var \WodorNet\Vindinium\Scout
      */
     private $scout;
-
-    /**
-     * @var State
-     */
-    private $state;
 
     /**
      * @param Scout $scout
@@ -26,7 +19,7 @@ class Greedy
     public function __construct(Scout $scout)
     {
         $this->scout = $scout;
-        $this->logger = new Logger('main');
+        parent::__construct();
     }
 
     /**

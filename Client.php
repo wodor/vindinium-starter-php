@@ -57,8 +57,9 @@ class Client
 
         $state = new \WodorNet\Vindinium\State();
         $state->update($stateArray);
-        var_dump($stateArray);
-        $botObject = new \WodorNet\Vindinium\Bot\Greedy(new \WodorNet\Vindinium\Scout());
+//        $botObject = new \WodorNet\Vindinium\Bot\Greedy(new \WodorNet\Vindinium\Scout());
+        $botObject = new \WodorNet\Vindinium\Bot\PathFollower();
+        $botObject->setPath($botObject->generateSouthPath());
         $botObject->setState($state);
         ob_start();
         while ($this->isFinished($stateArray) === false) {
