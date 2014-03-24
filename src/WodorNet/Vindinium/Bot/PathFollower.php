@@ -21,8 +21,6 @@ class PathFollower extends AbstractBot
     public function setPath($path)
     {
         $this->path = $path;
-        $this->path->rewind();
-        $this->path->setIteratorMode(\SplQueue::IT_MODE_KEEP);
     }
 
     public function move()
@@ -63,25 +61,21 @@ class PathFollower extends AbstractBot
     protected function followPath($from)
     {
         $this->logger->debug($this->path);
+
         if ($this->path->isEmpty()) {
             $this->logger->debug("Path is empty, we don't go anywhere");
+
             return $from;
         }
 
-        $this->path->rewind();
-        $this->logger->debug("Key: " . $this->path->key());
-        $to = $this->path->current();
+        $to = $this->path->bottom();
 
-        if($to == $from) {
-            $this->logger->debug('We are already at destination ' . $to . ', moving to next');
-            $this->path->dequeue();
-            $this->path->rewind();
+        if ($to == $from) {
+            $this->logger->debug('We are already at destination ' . $to . ', moving to next step');
+            $dq = $this->path->dequeue();
+            $this->logger->debug('deququed' . $dq);
 
-            if (!$this->path->isEmpty()) {
-                return $this->path->current();
-            } else {
-                return $from;
-            }
+            return $this->followPath($from);
         }
 
         $this->logger->debug('Not reached, being at: ' . $from . ' going to' . $to);
@@ -89,8 +83,6 @@ class PathFollower extends AbstractBot
         if (!$this->state->getBoard()->createTileInPosition($to)->isPassable() && $to->isNeighbourOf($from)) {
             $this->logger->debug(sprintf('Position %s is a neighbour and is not passable', $to));
             $this->path->dequeue();
-
-            return $to;
         }
 
         return $to;
