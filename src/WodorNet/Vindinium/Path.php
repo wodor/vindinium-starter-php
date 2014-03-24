@@ -11,6 +11,6 @@ class Path extends \SplQueue
         foreach($this as $k=>$p) {
             $dump .= "$k: $p ";
         }
-        return "elements count: ".(string)iterator_count($this) . "  " . $dump;
+        return "elements count: ".(string)iterator_count($this) . $dump;
     }
 }

@@ -35,9 +35,9 @@ class PositionSpec extends ObjectBehavior
     function it_tells_direction_to_other_position()
     {
         $otherPosition = new Position(0,0);
-        $this->moveStringTo($otherPosition)->shouldReturn('North');
+        $this->moveStringTo($otherPosition)->shouldReturn('West');
 
         $otherPosition = new Position(0,3);
-        $this->moveStringTo($otherPosition)->shouldReturn('West');
+        $this->moveStringTo($otherPosition)->shouldReturn('North');
     }
 }

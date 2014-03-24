@@ -24,10 +24,12 @@ class BoardSpec extends ObjectBehavior
         $this->shouldHaveType('WodorNet\Vindinium\Board');
     }
 
-    function it_finds_surrounding_passable_tiles()
+    function Xit_finds_surrounding_passable_tiles()
     {
-        $this->getSurroundingPassableTiles(new Position(3,3))
-            ->shouldHaveCount(2);
+//        $surroundingPassableTiles = $this->getSurroundingPassableTiles(new Position(3, 3));
+//        foreach($surroundingPassableTiles as $tile) {
+//            $tile->shouldBeAnInstanceOf('WodorNet\Vindinium\Tile\AbstractTileSS');
+//        }
     }
 
     function it_builds_tile_graph()
@@ -41,6 +43,4 @@ class BoardSpec extends ObjectBehavior
         $this->getPositionByStringIndex(8)->getY()->shouldReturn(1);
 
     }
-
-// pomysl - rob ekspoloracje - dawaj info jak blisko sa poszczegolne cele
 }

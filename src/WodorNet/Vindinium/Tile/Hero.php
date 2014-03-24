@@ -9,7 +9,8 @@ class Hero extends AbstractTile
      * or maybe we should when hero is weak enough
      *
      * Not being passable can make some parts of map innaccessible
-     *
+     * but for now we recalculate the paths every time and maybe we want to go
+     * around the hero
      * @return bool
      */
     public function isPassable()
