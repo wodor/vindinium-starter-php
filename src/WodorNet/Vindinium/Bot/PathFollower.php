@@ -28,39 +28,12 @@ class PathFollower extends AbstractBot
     public function move()
     {
         $from = $this->state->getProtagonist()->getPos();
-
-        $this->logger->debug($this->path);
-        if (!$this->path->isEmpty()) {
-            $this->path->rewind();
-            $this->logger->debug("Key: " . $this->path->key());
-            $to = $this->path->current();
-            if ($to != $from) {
-                $this->logger->debug('Not reached, being at: ' . $from . ' going to' . $to);
-            } else {
-                $this->logger->debug('We are already at destination ' . $to . ', moving to next');
-                $this->path->dequeue();
-                $this->path->rewind();
-                if(!$this->path->isEmpty()) {
-                    $to = $this->path->current();
-                } else {
-                    $to = $from;
-                }
-                $this->logger->debug($this->path);
-            }
-            $tile = $this->state->getBoard()->createTileInPosition($to);
-            $this->logger->debug( 'to is ' . $tile)  ;
-            if (!$this->state->getBoard()->createTileInPosition($to)->isPassable() && $to->isNeighbourOf($from)) {
-                $this->logger->debug(sprintf('Position %s is a neighbour and is not passable', $to));
-                $this->path->dequeue();
-            }
-        } else {
-            $this->logger->debug("Path is empty, we don't go anywhere");
-            $to = $from;
-        }
+        $to = $this->followPath($from);
 
         $move = $from->moveStringTo($to);
 
-        $this->logger->info('Decided to go to: ' . $to . ' from '.$from . ' move: ' . $move ,  array('pid' => getmypid()));
+        $tile = $this->state->getBoard()->createTileInPosition($to);
+        $this->logger->info('Decided to go to: ' . $tile . ' from '. $from . ' move: ' . $move ,  array('pid' => getmypid()));
 
         return $move;
     }
@@ -81,5 +54,45 @@ class PathFollower extends AbstractBot
         $path->enqueue(new Position(5, 4));
 
         return $path;
+    }
+
+    /**
+     * @param $from
+     * @return mixed
+     */
+    protected function followPath($from)
+    {
+        $this->logger->debug($this->path);
+        if ($this->path->isEmpty()) {
+            $this->logger->debug("Path is empty, we don't go anywhere");
+            return $from;
+        }
+
+        $this->path->rewind();
+        $this->logger->debug("Key: " . $this->path->key());
+        $to = $this->path->current();
+
+        if($to == $from) {
+            $this->logger->debug('We are already at destination ' . $to . ', moving to next');
+            $this->path->dequeue();
+            $this->path->rewind();
+
+            if (!$this->path->isEmpty()) {
+                return $this->path->current();
+            } else {
+                return $from;
+            }
+        }
+
+        $this->logger->debug('Not reached, being at: ' . $from . ' going to' . $to);
+
+        if (!$this->state->getBoard()->createTileInPosition($to)->isPassable() && $to->isNeighbourOf($from)) {
+            $this->logger->debug(sprintf('Position %s is a neighbour and is not passable', $to));
+            $this->path->dequeue();
+
+            return $to;
+        }
+
+        return $to;
     }
 }

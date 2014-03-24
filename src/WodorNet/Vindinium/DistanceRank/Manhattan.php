@@ -16,7 +16,6 @@ class Manhattan extends \SplHeap
         $this->protagonistPosition = $protagonistPosition;
     }
 
-
     /**
      * (PHP 5 &gt;= 5.3.0)<br/>
      * Compare elements in order to place them correctly in the heap while sifting up.
