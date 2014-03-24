@@ -70,18 +70,10 @@ class PathFollower extends AbstractBot
 
         $to = $this->path->bottom();
 
-        if ($to == $from) {
-            $this->logger->debug('We are already at destination ' . $to . ', moving to next step');
-            $dq = $this->path->dequeue();
-            $this->logger->debug('deququed' . $dq);
+        $this->logger->debug('Dest. Not reached, being at: ' . $from . ' still heading to' . $to);
 
-            return $this->followPath($from);
-        }
-
-        $this->logger->debug('Not reached, being at: ' . $from . ' going to' . $to);
-
-        if (!$this->state->getBoard()->createTileInPosition($to)->isPassable() && $to->isNeighbourOf($from)) {
-            $this->logger->debug(sprintf('Position %s is a neighbour and is not passable', $to));
+        if ($to->isNeighbourOf($from)) {
+            $this->logger->debug(sprintf('Position %s is a neighbour, we\'ll get there next step', $to));
             $this->path->dequeue();
         }
 
