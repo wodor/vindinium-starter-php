@@ -15,8 +15,8 @@ class Hero extends AbstractTile
      */
     public function isPassable()
     {
-//        return true;
-        return false;
+        return true;
+//        return false;
     }
 
     public function isMovable()

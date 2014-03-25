@@ -36,7 +36,7 @@ class GreedySpec extends ObjectBehavior
     {
         $protagonistPosition->getX()->willReturn(0);
         $protagonistPosition->getY()->willReturn(0);
-        $protagonist->getPos()->willReturn($protagonistPosition);
+        $protagonist->getPosition()->willReturn($protagonistPosition);
         $state->getProtagonist()->willReturn($protagonist);
         $scout->findClosestMine()->willReturn($minePosition);
         $protagonistPosition->moveStringTo($minePosition)->shouldBeCalled()

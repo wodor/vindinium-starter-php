@@ -58,8 +58,9 @@ class Client
         $state = new \WodorNet\Vindinium\State();
         $state->update($stateArray);
 //        $botObject = new \WodorNet\Vindinium\Bot\Greedy(new \WodorNet\Vindinium\Scout());
-        $botObject = new \WodorNet\Vindinium\Bot\PathFollower();
-        $botObject->setPath($botObject->generateSouthPath());
+//        $botObject = new \WodorNet\Vindinium\Bot\PathFollower(new \WodorNet\Vindinium\Scout\Grapher());
+        $botObject = new \WodorNet\Vindinium\Bot\GreedyGrapherUser(new \WodorNet\Vindinium\Scout\Grapher());
+//        $botObject->setPath($botObject->generateSouthPath());
         $botObject->setState($state);
         ob_start();
         while ($this->isFinished($stateArray) === false) {
@@ -76,7 +77,7 @@ class Client
             $stateArray = $this->move($url, $direction);
         }
         echo $display->displayLink();
-        echo $state->getProtagonist()->getPos() . ' start: ' . $state->getProtagonist()->getSpawnPos();
+        echo $state->getProtagonist()->getPosition() . ' start: ' . $state->getProtagonist()->getSpawnPos();
         ob_flush();
         ob_end_clean();
     }

@@ -25,7 +25,7 @@ class PathFollower extends AbstractBot
 
     public function move()
     {
-        $from = $this->state->getProtagonist()->getPos();
+        $from = $this->state->getProtagonist()->getPosition();
         $to = $this->followPath($from);
 
         $move = $from->moveStringTo($to);

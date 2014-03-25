@@ -29,7 +29,7 @@ class Greedy extends AbstractBot
     {
         $this->state = $state;
         $this->scout->setBoard($state->getBoard());
-        $this->scout->setPosition($this->state->getProtagonist()->getPos());
+        $this->scout->setPosition($this->state->getProtagonist()->getPosition());
     }
 
     /**
@@ -37,7 +37,7 @@ class Greedy extends AbstractBot
      */
     public function move()
     {
-        $from = $this->state->getProtagonist()->getPos();
+        $from = $this->state->getProtagonist()->getPosition();
 
         $to = $this->scout->findClosestMine();
 

@@ -88,7 +88,7 @@ class Hero
     /**
      * @return Position
      */
-    public function getPos()
+    public function getPosition()
     {
         return $this->pos;
     }

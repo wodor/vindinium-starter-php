@@ -25,7 +25,7 @@ abstract class AbstractTile
     private $board;
 
     /**
-     * @var Tile[]
+     * @var SplObjectStorage
      */
     private $neighbours;
 
@@ -38,6 +38,7 @@ abstract class AbstractTile
         $this->position = $position;
         $this->board = $board;
         $this->symbol = $symbol;
+        $this->neighbours = new \SplObjectStorage();
     }
 
     /**
@@ -66,7 +67,15 @@ abstract class AbstractTile
 
     public function addNeighbour(AbstractTile $tile)
     {
-        $this->neighbours[] = $tile;
+        $this->neighbours->attach($tile);
+    }
+
+    /**
+     * @return \WodorNet\Vindinium\Tile\Tile[]
+     */
+    public function getNeighbours()
+    {
+        return $this->neighbours;
     }
 
     /**

@@ -17,7 +17,7 @@ class Board
         $this->size = $size;
         $this->tilesString = $tilesString;
         $this->tiles = new \SplObjectStorage();
-        $this->buildTileGraph($this->getFirstPassableTile());
+//        $this->buildTileGraph($this->getFirstPassableTile());
 
 //        foreach ($this->tiles as $tile) {
 //            echo "\n" . $tile;
@@ -74,7 +74,7 @@ class Board
 
         $tile = $this->createTile($startPos, $symbol);
 
-        // fuck memory for now
+        // flick memory for now
         $this->tilesArray[(string) $startPos] = $tile;
 
         return $tile;
@@ -116,14 +116,12 @@ class Board
      */
     public function positionIsInBounds(Position $startPos)
     {
-        $pos = $this->tilesPositionIndex($startPos);
-        if (($pos > strlen($this->tilesString)-2 || $startPos->getX() > $this->size - 1)) {
+        if (($startPos->getY() > $this->size-1 || $startPos->getX() > $this->size - 1)) {
             return false;
         };
         if ($startPos->getX()<0 || $startPos->getY()<0) {
             return false;
         }
-
         return true;
     }
 
@@ -168,13 +166,25 @@ class Board
                 $this->buildTileGraph($discoveredTile);
             }
         }
+        else {
+//            echo "\n contains already" . $tile;
+        }
+
     }
 
     /**
+     * @param  Position $startingPosition
+     * $startingPosition sense is to have correct starting point if movable things are able to
+     * cut the graph and we re-calculate graph every move
+     * this a bit contradicts what board should be (static once-calculated source of information), but ok for now
      * @return \SplObjectStorage
      */
-    public function getTiles()
+    public function getTilesGraph(Position $startingPosition)
     {
+//        if (empty($this->tiles)) {
+            $this->buildTileGraph($this->createTileInPosition($startingPosition));
+//        }
+
         return $this->tiles;
     }
 

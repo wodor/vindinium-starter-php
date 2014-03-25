@@ -31,7 +31,7 @@ class PathFollowerSpec extends ObjectBehavior
         $path->bottom()->willReturn(new Position(1,1));
         $path->dequeue()->shouldNotBeCalled()->willReturn(new Position(10,1));
 
-        $protagonist->getPos()->willReturn(new Position(1,1));
+        $protagonist->getPosition()->willReturn(new Position(1,1));
 
         $this->setPath($path);
         $this->move()->shouldReturn('Stay');
@@ -43,7 +43,7 @@ class PathFollowerSpec extends ObjectBehavior
         $path->bottom()->willReturn(new Position(5,1));
         $path->dequeue()->shouldNotBeCalled();
 
-        $protagonist->getPos()->willReturn(new Position(1,1));
+        $protagonist->getPosition()->willReturn(new Position(1,1));
 
         $this->setPath($path);
         $this->move()->shouldReturn('South');
