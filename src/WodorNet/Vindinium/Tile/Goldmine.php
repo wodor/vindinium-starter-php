@@ -6,6 +6,6 @@ class Goldmine extends AbstractTile
 {
     public function isFree()
     {
-        return $this->symbol{1} == '-';
+        return $this->symbol{1} != '1';
     }
 }

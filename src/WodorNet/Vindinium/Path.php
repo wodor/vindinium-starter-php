@@ -8,10 +8,10 @@ class Path extends \SplQueue
     {
         $s = clone $this;
         $dump = '';
-        foreach($this as $k=>$p) {
+        foreach($s as $k=>$p) {
             $dump .= " $k: " . $p->getPosition();
         }
-        return "elements count: ".(string)iterator_count($this) . $dump;
+        return "elements count: ".(string)iterator_count($s) . $dump;
     }
 
     public function getCost()

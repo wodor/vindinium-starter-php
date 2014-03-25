@@ -30,7 +30,7 @@ class PathFollower extends AbstractBot
 
         $move = $from->moveStringTo($to);
 
-        $tile = $this->state->getBoard()->createTileInPosition($to);
+        $tile = $this->state->getBoard()->fetchTileInPosition($to);
         $this->logger->info('Decided to go to: ' . $tile . ' from '. $from . ' move: ' . $move ,  array('pid' => getmypid()));
 
         return $move;

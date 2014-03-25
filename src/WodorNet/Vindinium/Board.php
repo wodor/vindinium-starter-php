@@ -9,19 +9,19 @@ class Board
 
     private $size;
     private $tilesString;
-    private $tiles;
-    private $tilesArray;
+    private $tiles; // graph
+    private $tilesArray; // identityMap of tiles
 
-    public function __construct($size, $tilesString)
+    public function __construct()
+    {
+    }
+
+    public function update($size, $tilesString)
     {
         $this->size = $size;
         $this->tilesString = $tilesString;
+        $this->tilesArray = array();
         $this->tiles = new \SplObjectStorage();
-//        $this->buildTileGraph($this->getFirstPassableTile());
-
-//        foreach ($this->tiles as $tile) {
-//            echo "\n" . $tile;
-//        }
     }
 
     private function getFirstPassableTile()
@@ -29,7 +29,7 @@ class Board
         $i = 0;
         while (true) {
             $startPos = $this->getPositionByStringIndex($i);
-            $tile = $this->createTileInPosition($startPos);
+            $tile = $this->fetchTileInPosition($startPos);
             if ($tile->isPassable()) {
                 return $tile;
             }
@@ -59,7 +59,7 @@ class Board
      * @return AbstractTile
      * @throws \OutOfBoundsException
      */
-    public function createTileInPosition(Position $startPos)
+    public function fetchTileInPosition(Position $startPos)
     {
         if (isset($this->tilesArray[(string) $startPos])) {
             return $this->tilesArray[(string) $startPos];
@@ -72,12 +72,9 @@ class Board
 
         $symbol = substr($this->tilesString, $pos, 2);
 
-        $tile = $this->createTile($startPos, $symbol);
+        $this->tilesArray[(string) $startPos] = $this->createTile($startPos, $symbol);
 
-        // flick memory for now
-        $this->tilesArray[(string) $startPos] = $tile;
-
-        return $tile;
+        return $this->tilesArray[(string) $startPos];
     }
 
     /**
@@ -152,7 +149,7 @@ class Board
             if (!$this->positionIsInBounds($neighbour)) {
                 continue;
             }
-            yield $this->createTileInPosition($neighbour);
+            yield $this->fetchTileInPosition($neighbour);
         }
     }
 
@@ -166,10 +163,6 @@ class Board
                 $this->buildTileGraph($discoveredTile);
             }
         }
-        else {
-//            echo "\n contains already" . $tile;
-        }
-
     }
 
     /**
@@ -181,8 +174,9 @@ class Board
      */
     public function getTilesGraph(Position $startingPosition)
     {
-//        if (empty($this->tiles)) {
-            $this->buildTileGraph($this->createTileInPosition($startingPosition));
+        $this->tiles = new \SplObjectStorage();
+//        if ($this->tiles->count() == 0) {
+            $this->buildTileGraph($this->fetchTileInPosition($startingPosition));
 //        }
 
         return $this->tiles;
