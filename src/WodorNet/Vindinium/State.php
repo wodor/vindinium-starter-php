@@ -39,7 +39,7 @@ class State
     public function update($stateArray)
     {
         $this->stateArray = $stateArray;
-        $this->board->update($stateArray['game']['board']['size'], $stateArray['game']['board']['tiles']);
+        $this->board->setState($stateArray['game']['board']['tiles']);
         foreach ($stateArray['game']['heroes'] as $heroArray) {
             $hero = new Hero(
                 isset($heroArray['userId']) ? $heroArray['userId'] : null,

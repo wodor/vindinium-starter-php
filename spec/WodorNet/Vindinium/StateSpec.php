@@ -7,7 +7,8 @@ use Prophecy\Argument;
 
 class StateSpec extends ObjectBehavior
 {
-    const tiles = '####$$$$    @1@2';
+    const tiles = '########$$$$$$$$        @1@2    ';
+
 
     const size = 4;
 

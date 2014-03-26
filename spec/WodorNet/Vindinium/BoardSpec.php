@@ -11,7 +11,7 @@ class BoardSpec extends ObjectBehavior
 {
     function let()
     {
-        $this->beConstructedWith(4,
+        $this->setState(
             '$-    $-'.
             '[]  ####'.
             '    ##  '.
@@ -34,7 +34,14 @@ class BoardSpec extends ObjectBehavior
 
     function it_builds_tile_graph()
     {
-        $this->getTiles()->shouldHaveCount(7);
+        // TODO: write matcher to assert internals
+//        foreach($this->getTiles()->getWrappedObject() as $tile) {
+//            echo "\n $tile";
+//            foreach($tile->getNeighbours() as $n) {
+//                echo "\n\t" . $n;
+//            }
+//        }
+        $this->getTilesGraph(new Position(2,0))->shouldHaveCount(9);
     }
 
     function it_calculates_postion_by_string_index()

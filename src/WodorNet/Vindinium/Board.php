@@ -14,11 +14,12 @@ class Board
 
     public function __construct()
     {
+        $this->tiles = new \SplObjectStorage();
     }
 
-    public function update($size, $tilesString)
+    public function setState($tilesString)
     {
-        $this->size = $size;
+        $this->size = (int)sqrt(strlen($tilesString) / 2);
         $this->tilesString = $tilesString;
         $this->tilesArray = array();
         $this->tiles = new \SplObjectStorage();
@@ -178,6 +179,14 @@ class Board
 //        if ($this->tiles->count() == 0) {
             $this->buildTileGraph($this->fetchTileInPosition($startingPosition));
 //        }
+
+//        foreach($this->tiles as $tile) {
+//            echo "\n" . $tile;
+//            foreach($tile->getNeighbours() as $n) {
+//                echo "\n\t $n";
+//            }
+//        }
+
 
         return $this->tiles;
     }
