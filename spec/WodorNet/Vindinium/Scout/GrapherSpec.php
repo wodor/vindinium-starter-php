@@ -13,7 +13,7 @@ class GrapherSpec extends ObjectBehavior
 {
     private $map1;
 
-    public function let(State $state, Hero $hero)
+    public function let()
     {
         $this->map1 =   '##  @2  ####      ##'.
                         '      ########      '.
@@ -26,27 +26,35 @@ class GrapherSpec extends ObjectBehavior
                         '    @1########      '.
                         '##      ####      ##';
 
+    }
+
+    /**
+     */
+    public function it_generates_reasonable_path(State $state, Hero $hero)
+    {
         $board = new Board();
         $board->setState($this->map1);
 
         $state->getProtagonist()->willReturn($hero);
         $state->getBoard()->willReturn($board);
+        $hero->getPosition()->willReturn(new Position(8,2));
         $this->setState($state);
-    }
-
-    /**
-     */
-    public function it_generates_reasonable_path()
-    {
-        $this->calculatePathsToPois(new Position(8,2));
         $path = $this->findClosestMine();
 
-        echo $path->getWrappedObject();
-
+        $path->shouldLeadThroughPosition(new Position(7,2));
+        $path->shouldLeadThroughPosition(new Position(6,6));
+        $path->shouldLeadThroughPosition(new Position(4,9));
     }
 
-    public function it_finds_optimal_path_to_chosen_position()
+    public function it_finds_optimal_path_to_chosen_position(State $state, Hero $hero)
     {
+        $board = new Board();
+        $board->setState($this->map1);
+
+        $state->getProtagonist()->willReturn($hero);
+        $state->getBoard()->willReturn($board);
+
+        $this->setState($state);
         $path = $this->pathFromTo(new Position(8,2), new Position(9,6));
 
         $path->shouldLeadThroughPosition(new Position(7,2));

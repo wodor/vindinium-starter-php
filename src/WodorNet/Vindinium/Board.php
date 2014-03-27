@@ -144,7 +144,7 @@ class Board
         }
     }
 
-    private function surroundingTiles(Position $position)
+    public function surroundingTiles(Position $position)
     {
         foreach ($position->surroundings() as $neighbour) {
             if (!$this->positionIsOnBoard($neighbour)) {

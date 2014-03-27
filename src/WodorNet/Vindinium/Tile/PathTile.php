@@ -20,7 +20,7 @@ class PathTile
     public function __construct(AbstractTile $tile)
     {
         $this->tile = $tile;
-        $this->cost = 1000;
+        $this->cost = 1000000;
     }
 
     public function getPosition()
@@ -62,21 +62,22 @@ class PathTile
 
     public function __toString()
     {
-        return sprintf("\n%s, cost: %s, previous: %s)",
+        return sprintf("\n%s, cost: %s, previous: %s, %s)",
             $this->tile,
             is_null($this->cost) ? 'null' : $this->cost,
-            $this->previousTile instanceof PathTile ? $this->previousTile->getPosition() : 'none'
+            $this->previousTile instanceof PathTile ? $this->previousTile->getPosition() : 'none',
+            spl_object_hash($this)
         );
     }
 
     public function getNeighbours()
     {
         foreach ($this->tile->getNeighbours() as $n) {
-
-            if (!isset(self::$identityMap[(string) $n->getPosition()])) {
-                self::$identityMap[(string) $n->getPosition()] =  new self($n);
-            }
-            yield self::$identityMap[(string) $n->getPosition()];
+            yield $n;
+//            if (!isset(self::$identityMap[(string) $n->getPosition()])) {
+//                self::$identityMap[(string) $n->getPosition()] =  new self($n);
+//            }
+//            yield self::$identityMap[(string) $n->getPosition()];
         };
     }
 

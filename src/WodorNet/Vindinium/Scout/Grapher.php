@@ -8,7 +8,9 @@ use WodorNet\Vindinium\DistanceRank\PathtileQueue;
 use WodorNet\Vindinium\Path;
 use WodorNet\Vindinium\Position;
 use WodorNet\Vindinium\State;
+use WodorNet\Vindinium\Tile\Goldmine;
 use WodorNet\Vindinium\Tile\PathTile;
+use WodorNet\Vindinium\Tile\PathTileFactory;
 
 class Grapher
 {
@@ -34,16 +36,6 @@ class Grapher
         $this->goldMines = new PathCost();
     }
 
-    public function calculatePathsToPois(Position $position)
-    {
-        $this->goldMines = new PathCost();
-        $this->discoveredTiles = new \SplObjectStorage();
-
-        $tile = $this->board->fetchTileInPosition($position);
-
-
-    }
-
     public function setState(State $state)
     {
         $this->board = $state->getBoard();
@@ -55,60 +47,71 @@ class Grapher
      */
     public function findClosestMine()
     {
-        foreach($this->goldMines as $path) {
-            try{
-                /** @var Path $path */
-                $tile = $path->top();
-                if($tile->isFree()) {
-                    return $path;
-                }
-            }
-            catch (\RuntimeException $e) {
-                throw new \Exception("\n $path  was empty") ;
-            }
-        };
+        foreach($this->djikstra($this->position) as $tile) {
+
+           foreach($this->board->surroundingTiles($tile->getPosition()) as $potentianPoi) {
+               if($potentianPoi instanceof Goldmine && $potentianPoi->isFree()) {
+
+                   $poiTile = new PathTile($potentianPoi);
+                   $poiTile->setPreviousTile($tile);
+                   $poiTile->setCost($tile->getCost() + 1);
+
+                   return $this->buildPathByGraphTiles($poiTile);
+               }
+           } ;
+        }
     }
 
     public function pathFromTo($from, $to)
     {
-        $Q = new PathtileQueue();
+        foreach ($this->djikstra($from) as $tile) {
+            if ($tile->getPosition() == $to) {
+                break;
+            }
+        };
 
+        $p = $this->buildPathByGraphTiles($tile);
+
+        return $p;
+    }
+
+    protected function djikstra(Position $from)
+    {
+        $Q = new PathtileQueue();
+        $pathTileFactory = new PathTileFactory();
         $source = new PathTile($this->board->fetchTileInPosition($from));
         $source->setCost(0);
-
-        foreach($this->board->recalculateGraphFromPosition($from) as $u) {
-            if($u->getPosition() != $source) {
+        foreach ($this->board->recalculateGraphFromPosition($from) as $u) {
+            if ($u->getPosition() != $source) {
                 $Q->insertPathTile(new PathTile($u));
             }
         };
         $Q->insertPathTile($source);
-
-        $tile = $this->djikstra($Q, $to);
-
-        $p =  new Path();
-        while($tile = $tile->getPreviousTile()) {
-            $p -> unshift($tile);
-        }
-        return $p;
-    }
-
-    /**
-     * @param $Q
-     */
-    protected function djikstra($Q, Position $to)
-    {
         foreach ($Q as $u) {
-            foreach ($u->getNeighbours() as $v) {
+            foreach ($pathTileFactory->neighbours($u) as $v) {
                 if (($u->getCost() + 1) < $v->getCost()) {
                     $v->setCost($u->getCost() + 1);
                     $v->setPreviousTile($u);
-                    if($v->getPosition() == $to) {
-                        return $v;
-                    }
                     $Q->insertPathTile($v);
+                    yield $v;
                 }
             };
         }
+    }
+
+    /**
+     * @param $tile
+     * @return Path
+     */
+    protected function buildPathByGraphTiles($tile)
+    {
+        $p = new Path();
+        $p->unshift($tile);
+        while ($tile = $tile->getPreviousTile()) {
+            $p->unshift($tile);
+        }
+
+        return $p;
     }
 
 }
