@@ -6,7 +6,6 @@ use WodorNet\Vindinium\Tile\AbstractTile;
 
 class Board
 {
-
     private $size;
     private $tilesString;
     private $tiles; // graph
@@ -19,10 +18,11 @@ class Board
 
     public function setState($tilesString)
     {
-        $this->size = (int)sqrt(strlen($tilesString) / 2);
+        $this->size = (int) sqrt(strlen($tilesString) / 2);
         $this->tilesString = $tilesString;
         $this->tilesArray = array();
         $this->tiles = new \SplObjectStorage();
+        $this->buildTileGraph($this->getFirstPassableTile());
     }
 
     private function getFirstPassableTile()
@@ -34,13 +34,12 @@ class Board
             if ($tile->isPassable()) {
                 return $tile;
             }
-            $i++;
-            $i++;
+            $i = $i + 2;
         }
     }
 
     /**
-     * @return mixed
+     * @return integer
      */
     public function getSize()
     {
@@ -48,7 +47,7 @@ class Board
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getTilesString()
     {
@@ -67,7 +66,7 @@ class Board
         }
         $pos = $this->tilesPositionIndex($startPos);
 
-        if (!$this->positionIsInBounds($startPos)) {
+        if (!$this->positionIsOnBoard($startPos)) {
             throw new \OutOfBoundsException($startPos . " is out of bounds");
         }
 
@@ -112,7 +111,7 @@ class Board
      * @param  Position $startPos
      * @return mixed
      */
-    public function positionIsInBounds(Position $startPos)
+    public function positionIsOnBoard(Position $startPos)
     {
         if (($startPos->getY() > $this->size-1 || $startPos->getX() > $this->size - 1)) {
             return false;
@@ -120,6 +119,7 @@ class Board
         if ($startPos->getX()<0 || $startPos->getY()<0) {
             return false;
         }
+
         return true;
     }
 
@@ -129,12 +129,12 @@ class Board
      */
     private function tilesPositionIndex(Position $startPos)
     {
-        $pos = $startPos->getX() * $this->size * 2 + $startPos->getY() * 2;
+        $pos = ($startPos->getX() * $this->size + $startPos->getY()) * 2;
 
         return $pos;
     }
 
-    public function surroundingPassableTiles(Position $position)
+    private function surroundingPassableTiles(Position $position)
     {
         foreach ($this->surroundingTiles($position) as $tile) {
             if ($tile->isPassable()) {
@@ -144,17 +144,17 @@ class Board
         }
     }
 
-    public function surroundingTiles(Position $position)
+    private function surroundingTiles(Position $position)
     {
-        foreach ($position->neighbours() as $neighbour) {
-            if (!$this->positionIsInBounds($neighbour)) {
+        foreach ($position->surroundings() as $neighbour) {
+            if (!$this->positionIsOnBoard($neighbour)) {
                 continue;
             }
             yield $this->fetchTileInPosition($neighbour);
         }
     }
 
-    public function buildTileGraph(AbstractTile $tile)
+    private function buildTileGraph(AbstractTile $tile)
     {
         if (!$this->tiles->contains($tile)) {
             $this->tiles->attach($tile);
@@ -167,26 +167,17 @@ class Board
     }
 
     /**
-     * @param  Position $startingPosition
-     * $startingPosition sense is to have correct starting point if movable things are able to
+     * startingPosition sense is to have correct starting point if movable things are able to
      * cut the graph and we re-calculate graph every move
      * this a bit contradicts what board should be (static once-calculated source of information), but ok for now
+     *
+     * @param  Position          $startingPosition
      * @return \SplObjectStorage
      */
-    public function getTilesGraph(Position $startingPosition)
+    public function recalculateGraphFromPosition(Position $startingPosition)
     {
         $this->tiles = new \SplObjectStorage();
-//        if ($this->tiles->count() == 0) {
-            $this->buildTileGraph($this->fetchTileInPosition($startingPosition));
-//        }
-
-//        foreach($this->tiles as $tile) {
-//            echo "\n" . $tile;
-//            foreach($tile->getNeighbours() as $n) {
-//                echo "\n\t $n";
-//            }
-//        }
-
+        $this->buildTileGraph($this->fetchTileInPosition($startingPosition));
 
         return $this->tiles;
     }
@@ -207,5 +198,4 @@ class Board
 
         return $startPos;
     }
-
 }

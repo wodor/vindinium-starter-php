@@ -34,7 +34,7 @@ class Position
         return "( x:{$this->x}, y:{$this->y} )";
     }
 
-    public function neighbours()
+    public function surroundings()
     {
         $neighbours = [];
 
@@ -71,7 +71,7 @@ class Position
 
     public function isNeighbourOf(Position $position)
     {
-        foreach($this->neighbours() as $neighbour){
+        foreach($this->surroundings() as $neighbour){
             if($position->getX() == $neighbour->getX() && $position->getY() == $neighbour->getY()) {
                 return true;
             }
