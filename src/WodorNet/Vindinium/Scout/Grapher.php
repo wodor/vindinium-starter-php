@@ -4,11 +4,14 @@ namespace WodorNet\Vindinium\Scout;
 
 use WodorNet\Vindinium\Board;
 use WodorNet\Vindinium\DistanceRank\PathCost;
+use WodorNet\Vindinium\DistanceRank\PathtileQueue;
 use WodorNet\Vindinium\Path;
 use WodorNet\Vindinium\Tile\Goldmine;
 use WodorNet\Vindinium\Position;
 use WodorNet\Vindinium\State;
 use WodorNet\Vindinium\Tile\AbstractTile;
+use WodorNet\Vindinium\Tile\Ground;
+use WodorNet\Vindinium\Tile\PathTile;
 
 class Grapher
 {
@@ -46,11 +49,6 @@ class Grapher
         $this->djikstra($tile);
 
 //        echo $this->goldMines;
-    }
-
-    public function djikstra()
-    {
-
     }
 
     public function dfs(AbstractTile $tile, Path $path)
@@ -105,4 +103,48 @@ class Grapher
             }
         };
     }
+
+    public function pathFromTo($from, $to)
+    {
+        $Q = new PathtileQueue();
+
+        $source = new PathTile($this->board->fetchTileInPosition($from));
+        $source->setCost(0);
+
+        foreach($this->board->getTilesGraph($from) as $u) {
+            if($u->getPosition() != $source) {
+                $Q->insertPathTile(new PathTile($u));
+            }
+        };
+        $Q->insertPathTile($source);
+
+        $tile = $this->djikstra($Q, $to);
+
+        $p =  new Path();
+        while($tile = $tile->getPreviousTile()) {
+            $p -> unshift($tile);
+        }
+        echo $p;
+        return $p;
+    }
+
+    /**
+     * @param $Q
+     */
+    protected function djikstra($Q, Position $to)
+    {
+        foreach ($Q as $u) {
+            foreach ($u->getNeighbours() as $v) {
+                if (($u->getCost() + 1) < $v->getCost()) {
+                    $v->setCost($u->getCost() + 1);
+                    $v->setPreviousTile($u);
+                    if($v->getPosition() == $to) {
+                        return $v;
+                    }
+                    $Q->insertPathTile($v);
+                }
+            };
+        }
+    }
+
 }

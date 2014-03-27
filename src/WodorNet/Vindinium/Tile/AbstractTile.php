@@ -61,7 +61,7 @@ abstract class AbstractTile
 
     public function __toString()
     {
-        return  get_class($this) . " ($this->symbol) at " . $this->position . ' ' . spl_object_hash($this);
+        return  " ($this->symbol) at " . $this->position . ' ';// . spl_object_hash($this);
     }
 
 
