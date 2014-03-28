@@ -12,6 +12,11 @@ use WodorNet\Vindinium\Tile\Goldmine;
 use WodorNet\Vindinium\Tile\PathTile;
 use WodorNet\Vindinium\Tile\PathTileFactory;
 
+/**
+ * Class Grapher
+ *
+ * @package WodorNet\Vindinium\Scout
+ */
 class Grapher
 {
     /**
@@ -29,13 +34,22 @@ class Grapher
      */
     private $discoveredTiles;
 
+    /**
+     * @var \WodorNet\Vindinium\DistanceRank\PathCost
+     */
     private $goldMines;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->goldMines = new PathCost();
     }
 
+    /**
+     * @param State $state
+     */
     public function setState(State $state)
     {
         $this->board = $state->getBoard();
@@ -62,6 +76,11 @@ class Grapher
         }
     }
 
+    /**
+     * @param $from
+     * @param $to
+     * @return Path
+     */
     public function pathFromTo($from, $to)
     {
         foreach ($this->djikstra($from) as $tile) {
@@ -75,6 +94,11 @@ class Grapher
         return $p;
     }
 
+
+    /**
+     * @param Position $from
+     * @return \Generator
+     */
     protected function djikstra(Position $from)
     {
         $Q = new PathtileQueue();
