@@ -11,6 +11,7 @@ use WodorNet\Vindinium\State;
 use WodorNet\Vindinium\Tile\Goldmine;
 use WodorNet\Vindinium\Tile\PathTile;
 use WodorNet\Vindinium\Tile\PathTileFactory;
+use WodorNet\Vindinium\Tile\Tavern;
 
 /**
  * Class Grapher
@@ -40,11 +41,21 @@ class Grapher
     private $goldMines;
 
     /**
+     * @var \WodorNet\Vindinium\DistanceRank\PathCost
+     */
+    private $taverns;
+
+    /**
+     * @var State
+     */
+    private $state;
+
+    /**
      *
      */
     public function __construct()
     {
-        $this->goldMines = new PathCost();
+
     }
 
     /**
@@ -54,23 +65,31 @@ class Grapher
     {
         $this->board = $state->getBoard();
         $this->position = $state->getProtagonist()->getPosition();
+        $this->state = $state;
+        $this->goldMines = new PathCost();
+        $this->taverns = new PathCost();
+
+        foreach($this->djikstra($this->position) as $tile) {
+            $this->poiLookup($tile);
+        }
+
     }
 
+    public function thereAreMinesToConquer()
+    {
+        return $this->goldMines->valid();
+    }
     /**
      * @return Path
      */
     public function findClosestMine()
     {
-        echo "Finding closest mine from " . $this->position;
+        return $this->goldMines->top();
+    }
 
-
-        foreach($this->djikstra($this->position) as $tile) {
-            $pathToMine = $this->poiLookup($tile);
-            if($pathToMine instanceof Path) {
-                return $pathToMine;
-            }
-
-        }
+    public function findClosestTavern()
+    {
+        return $this->taverns->top();
     }
 
     /**
@@ -111,6 +130,8 @@ class Grapher
         yield $source;
         foreach ($Q as $u) {
             foreach ($pathTileFactory->neighbours($u) as $v) {
+                // rozwaz dodanie kosztu jesli jest przeciwnik
+                // warto tez dodac koszt bycia daleko od spawnpointa
                 if (($u->getCost() + 1) < $v->getCost()) {
                     $v->setCost($u->getCost() + 1);
                     $v->setPreviousTile($u);
@@ -137,21 +158,35 @@ class Grapher
     }
 
     /**
+     * Looks around a tile
+     *
      * @param $tile
      * @return Path
      */
     protected function poiLookup($tile)
     {
-        foreach ($this->board->surroundingTiles($tile->getPosition()) as $potentianPoi) {
-            if ($potentianPoi instanceof Goldmine && $potentianPoi->isFree()) {
-
-                $poiTile = new PathTile($potentianPoi);
-                $poiTile->setPreviousTile($tile);
-                $poiTile->setCost($tile->getCost() + 1);
-
-                return $this->buildPathByGraphTiles($poiTile);
+        foreach ($this->board->surroundingTiles($tile->getPosition()) as $toi) {
+            if ($toi instanceof Goldmine && $toi->getOwnerId() != $this->state->getProtagonist()->getId()) {
+                $this->goldMines->insert($this->buildPathToAbstractTile($tile, $toi));
+            }
+            if ($toi instanceof Tavern) {
+                $this->taverns->insert($this->buildPathToAbstractTile($tile, $toi));
             }
         };
+    }
+
+    /**
+     * @param $tile
+     * @param $potentialPoi
+     * @return Path
+     */
+    protected function buildPathToAbstractTile($tile, $potentialPoi)
+    {
+        $poiTile = new PathTile($potentialPoi);
+        $poiTile->setPreviousTile($tile);
+        $poiTile->setCost($tile->getCost() + 1);
+
+        return $this->buildPathByGraphTiles($poiTile);
     }
 
 }

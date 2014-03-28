@@ -42,7 +42,14 @@ class GreedyGrapherUser extends AbstractBot
     {
         $from = $this->state->getProtagonist()->getPosition();
 
-        $this->path = $this->scout->findClosestMine();
+        // w zaleznosci od tego ile masz kopalni i czy wygrywasz powinienes zwiekszac bezpieczenstwo
+
+        if(!$this->scout->thereAreMinesToConquer() || $this->state->getProtagonist()->getLife() < 60) {
+           $this->path = $this->scout->findClosestTavern();
+        }
+        else {
+            $this->path = $this->scout->findClosestMine();
+        }
 
         $to = $this->followPath($from);
 

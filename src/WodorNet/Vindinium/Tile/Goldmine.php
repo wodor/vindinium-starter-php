@@ -4,8 +4,8 @@ namespace WodorNet\Vindinium\Tile;
 
 class Goldmine extends AbstractTile
 {
-    public function isFree()
+    public function getOwnerId()
     {
-        return $this->symbol{1} != '1';
+        return $this->symbol{1};
     }
 }
