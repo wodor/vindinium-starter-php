@@ -41,7 +41,6 @@ class GreedyGrapherUser extends AbstractBot
     public function move()
     {
         $from = $this->state->getProtagonist()->getPosition();
-        $this->scout->calculatePathsToPois($from);
 
         $this->path = $this->scout->findClosestMine();
 
@@ -57,12 +56,14 @@ class GreedyGrapherUser extends AbstractBot
     }
 
     /**
+     *
+     * This method is overshoot as path is regenreated every step (for now)
      * @param $from
      * @return mixed
      */
     protected function followPath($from)
     {
-        $this->logger->debug($this->path);
+        $this->logger->debug("Following: " . $this->path);
 
         if (!$this->path instanceof Path OR $this->path->isEmpty()) {
             $this->logger->debug("Path is empty, we don't go anywhere");
@@ -79,7 +80,7 @@ class GreedyGrapherUser extends AbstractBot
             $this->path->dequeue();
         }
         else {
-           $this->logger->debug($from . ' is not e neighb of' . $to);
+           $this->logger->debug($from . ' is not a neighbour of' . $to);
         }
 
         return $to;

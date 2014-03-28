@@ -9,7 +9,7 @@ class Path extends \SplQueue
         $s = clone $this;
         $dump = '';
         foreach($s as $k=>$p) {
-            $dump .= " $k: " . $p->getPosition();
+            $dump .= " $k: " . $p;
         }
         return "elements count: ".(string)iterator_count($s) . $dump;
     }

@@ -61,18 +61,15 @@ class Grapher
      */
     public function findClosestMine()
     {
+        echo "Finding closest mine from " . $this->position;
+
+
         foreach($this->djikstra($this->position) as $tile) {
+            $pathToMine = $this->poiLookup($tile);
+            if($pathToMine instanceof Path) {
+                return $pathToMine;
+            }
 
-           foreach($this->board->surroundingTiles($tile->getPosition()) as $potentianPoi) {
-               if($potentianPoi instanceof Goldmine && $potentianPoi->isFree()) {
-
-                   $poiTile = new PathTile($potentianPoi);
-                   $poiTile->setPreviousTile($tile);
-                   $poiTile->setCost($tile->getCost() + 1);
-
-                   return $this->buildPathByGraphTiles($poiTile);
-               }
-           } ;
         }
     }
 
@@ -111,6 +108,7 @@ class Grapher
             }
         };
         $Q->insertPathTile($source);
+        yield $source;
         foreach ($Q as $u) {
             foreach ($pathTileFactory->neighbours($u) as $v) {
                 if (($u->getCost() + 1) < $v->getCost()) {
@@ -127,15 +125,33 @@ class Grapher
      * @param $tile
      * @return Path
      */
-    protected function buildPathByGraphTiles($tile)
+    protected function buildPathByGraphTiles(PathTile $tile)
     {
         $p = new Path();
-        $p->unshift($tile);
-        while ($tile = $tile->getPreviousTile()) {
+        do  {
             $p->unshift($tile);
-        }
+        } while ($tile = $tile->getPreviousTile());
 
+        $p->dequeue();
         return $p;
+    }
+
+    /**
+     * @param $tile
+     * @return Path
+     */
+    protected function poiLookup($tile)
+    {
+        foreach ($this->board->surroundingTiles($tile->getPosition()) as $potentianPoi) {
+            if ($potentianPoi instanceof Goldmine && $potentianPoi->isFree()) {
+
+                $poiTile = new PathTile($potentianPoi);
+                $poiTile->setPreviousTile($tile);
+                $poiTile->setCost($tile->getCost() + 1);
+
+                return $this->buildPathByGraphTiles($poiTile);
+            }
+        };
     }
 
 }

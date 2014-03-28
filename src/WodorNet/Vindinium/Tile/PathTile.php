@@ -2,6 +2,8 @@
 
 namespace WodorNet\Vindinium\Tile;
 
+use WodorNet\Vindinium\Position;
+
 class PathTile
 {
     static $identityMap = array();
@@ -80,5 +82,4 @@ class PathTile
 //            yield self::$identityMap[(string) $n->getPosition()];
         };
     }
-
 }

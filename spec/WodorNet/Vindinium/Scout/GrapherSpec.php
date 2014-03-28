@@ -12,6 +12,7 @@ use WodorNet\Vindinium\State;
 class GrapherSpec extends ObjectBehavior
 {
     private $map1;
+    private $map2;
 
     public function let()
     {
@@ -26,7 +27,16 @@ class GrapherSpec extends ObjectBehavior
                         '    @1########      '.
                         '##      ####      ##';
 
-    }
+        $this->map2 =   '##  @2  ####      ##'.
+                        '      ########      '.
+                        '        ####        '.
+                        '@1  []        []@4  '.
+                        '$-    ##    ##    $3'.
+                        '$1    ##    ##    $1'.
+                        '    []    @3  []    '.
+                        '        ####        '.
+                        '      ########      '.
+                        '##      ####      ##';    }
 
     /**
      */
@@ -60,6 +70,21 @@ class GrapherSpec extends ObjectBehavior
         $path->shouldLeadThroughPosition(new Position(7,2));
         $path->shouldLeadThroughPosition(new Position(6,5));
     }
+
+    public function it_finds_next_step_to_poi_if_its_neighbour(State $state, Hero $hero)
+    {
+        $board = new Board();
+        $board->setState($this->map2);
+
+        $state->getProtagonist()->willReturn($hero);
+        $state->getBoard()->willReturn($board);
+        $hero->getPosition()->willReturn(new Position(3,0));
+        $this->setState($state);
+        $path = $this->findClosestMine();
+
+        $path->shouldLeadThroughPosition(new Position(4,0));
+    }
+
 
     public function getMatchers()
     {

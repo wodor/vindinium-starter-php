@@ -65,6 +65,8 @@ class Client
         ob_start();
         while ($this->isFinished($stateArray) === false) {
             $state->update($stateArray);
+            $botObject->setState($state);
+            
             $display = new \WodorNet\Vindinium\Display($state);
             // Some nice output ;)
             echo $display->displayBoard();
