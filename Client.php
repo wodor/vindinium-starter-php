@@ -66,9 +66,10 @@ class Client
         while ($this->isFinished($stateArray) === false) {
             $state->update($stateArray);
             $botObject->setState($state);
-            
+
             $display = new \WodorNet\Vindinium\Display($state);
             // Some nice output ;)
+            echo "\nTurn " .$state->getTurn() . '/' . $state->getMaxTurns();
             echo $display->displayBoard();
             echo '.';
             ob_flush();
@@ -89,7 +90,7 @@ class Client
         // Get a JSON from the server containing the current state of the game
         if ($this->mode == 'training') {
             // Don't pass the 'map' parameter if you want a random map
-            $params = array('key' => $this->key, 'turns' => $this->numberOfTurns, 'map' => 'm1');
+            $params = array('key' => $this->key, 'turns' => $this->numberOfTurns, 'map' => 'm5');
             $api_endpoint = '/api/training';
         } elseif ($this->mode == 'arena') {
             $params = array('key' => $this->key);
@@ -97,7 +98,7 @@ class Client
         }
 
         // Wait for 10 minutes
-        $r = HttpPost::post($this->serverUrl . $api_endpoint, $params, 10 * 60);
+        $r = HttpPost::post($this->serverUrl . $api_endpoint, $params, 12 * 3600);
 
         if (isset($r['headers']['status_code']) && $r['headers']['status_code'] == 200) {
             return json_decode($r['content'], true);

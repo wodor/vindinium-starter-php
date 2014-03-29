@@ -29,6 +29,16 @@ class State
      */
     private $board;
 
+    /**
+     * @var int
+     */
+    private $turn;
+
+    /**
+     * @var int
+     */
+    private $maxTurns;
+
     public function __construct(){
         $this->board = new Board();
     }
@@ -40,6 +50,8 @@ class State
     {
         $this->stateArray = $stateArray;
         $this->board->setState($stateArray['game']['board']['tiles']);
+        $this->turn = $stateArray['game']['turn'];
+        $this->maxTurns = $stateArray['game']['maxTurns'];
         foreach ($stateArray['game']['heroes'] as $heroArray) {
             $hero = new Hero(
                 isset($heroArray['userId']) ? $heroArray['userId'] : null,
@@ -88,5 +100,23 @@ class State
     {
         return $this->getHeroes()[$this->stateArray['hero']['id']];
     }
+
+    /**
+     * @return int
+     */
+    public function getMaxTurns()
+    {
+        return $this->maxTurns;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTurn()
+    {
+        return $this->turn;
+    }
+
+
 
 }
