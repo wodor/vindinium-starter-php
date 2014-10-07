@@ -130,8 +130,6 @@ class Grapher
         yield $source;
         foreach ($Q as $u) {
             foreach ($pathTileFactory->neighbours($u) as $v) {
-                // rozwaz dodanie kosztu jesli jest przeciwnik
-                // warto tez dodac koszt bycia daleko od spawnpointa
                 if (($u->getCost() + 1) < $v->getCost()) {
                     $v->setCost($u->getCost() + 1);
                     $v->setPreviousTile($u);
